@@ -57,6 +57,7 @@ def WriteMessage(arr, msg):
 
    args: The image in the form of an array of tupples, and the message to input
    '''
+   maximum_length_available = (len(arr) - 11) * 3 
    message_length = str(bin(len(msg) * 8))[2:].zfill(32) #Find the length of the message in bits, 8 bits a character
    if len(message_length) <= 32: #Make sure the length of the message is not too long
       for i in range(11): #Loop through the first 11 pixels and input our length
@@ -73,6 +74,8 @@ def WriteMessage(arr, msg):
    else:
       print("Message too big!")
    bits = int(ReadBitsLength(arr),2) #Get the amount of bits we need to write
+   if bits > maximum_length_available:
+      raise Exception('Message too big for current picture!')
    bitsWritten = 0
    upper_bound = int(bits/3) + 5 #How many tupples we need to go through to write
    bin_list = ""
@@ -120,6 +123,7 @@ if __name__ == '__main__':
    Command line argument  3 is -f if it is a file if not then it is the raw command line message
    Command line argument 4 is the file if the -f flag is passed
    '''
+   print("This script should be run in python3, you are running",sys.version)
    if sys.argv[1].lower() == '-r':
       try:
          im = Image.open(sys.argv[2])
@@ -139,7 +143,11 @@ if __name__ == '__main__':
       else:
          message = sys.argv[3]
       im_array = list(im.getdata())[::-1]
-      WriteMessage(im_array, message)
+      try:
+         WriteMessage(im_array, message)
+      except Exception as e:
+         print(e)
+         
       im_new = Image.new(im.mode, im.size)
       im_new.putdata(im_array[::-1])
       im_new.save("resultimage.png","PNG")
