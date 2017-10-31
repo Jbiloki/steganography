@@ -1,6 +1,7 @@
 # steganography
 
-**Jacob Biloki**
+Developer: **Jacob Biloki**
+CWID: 891882573
 ## Architecture
 
 This is a project to demonstrate the use of steganograhy in the form of embeded text in images. In this script I write each bit of the message into the least significant bit of each RGB value in order to change the color intensite they least amount. The resulting image is written to a result.png file.
